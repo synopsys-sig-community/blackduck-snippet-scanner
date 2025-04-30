@@ -1,0 +1,50 @@
+name: "Black Duck Snippet Scanner"
+description: "Will use Black Duck API to scan the given hashes"
+author: Jouni Lehto
+branding:
+  icon: code
+  color: blue
+inputs:
+  blackduck_log_level:
+    description: Logging level
+    default: DEBUG
+    required: false
+  blackduck_url:
+    description: "Black Duck URL"
+    required: true
+  blackduck_apiToken:
+    description: "Black Duck Access token"
+    required: true
+  blackduck_outputFile:
+    description: "Filename with path where it will be created, example: github.workspace/blackduckSnippetFindings.json (default)"
+    default: ${{github.workspace}}/blackduckSnippetFindings.json
+    required: false
+  blackduck_changed_only:
+    description: "false analyzing all files in repo"
+    default: "true"
+    required: false
+  github_url:
+    description: "GitHub URL"
+    required: true
+  github_apiToken:
+    description: "GitHub Access token"
+    required: true
+  github_repo:
+    description: "GitHub repository"
+    required: true
+  github_pull_request_id:
+    description: "GitHub Pull request ID"
+    required: true
+  github_prComment:
+    description: "false will export json file as a response."
+    default: "false"
+    required: false
+
+runs:
+  using: composite
+  steps:
+    # Run the Python script
+    - run: |
+        pip3 install blackduck github
+        python3 ${{github.action_path}}/bd_snippet_scanner.py --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
+      shell: bash
