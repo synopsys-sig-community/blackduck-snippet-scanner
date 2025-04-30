@@ -5,7 +5,7 @@ import argparse
 import subprocess
 from blackduck.HubRestApi import HubInstance
 from timeit import default_timer as timer
-from snippetGihubCommenter import GihubCommenter
+from snippetGithubCommenter import GihubCommenter
 
 __author__ = "Jouni Lehto"
 __versionro__ = "0.0.1"
