@@ -17,7 +17,7 @@ inputs:
     required: true
   blackduck_outputFile:
     description: "Filename with path where it will be created, example: github.workspace/blackduckSnippetFindings.json (default)"
-    default: ${{github.workspace}}/blackduckSnippetFindings.json
+    default: ${{github.workspace}}/blackduck-snippet.sarif.json
     required: false
   blackduck_changed_only:
     description: "false analyzing all files in repo"
