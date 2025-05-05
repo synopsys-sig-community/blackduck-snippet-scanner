@@ -16,7 +16,7 @@ inputs:
     description: "Black Duck Access token"
     required: true
   blackduck_outputFile:
-    description: "Filename with path where it will be created, example: github.workspace/blackduckSnippetFindings.json (default)"
+    description: "Filename with path where it will be created, example: github.workspace/blackduck-snippet.sarif.json (default)"
     default: ${{github.workspace}}/blackduck-snippet.sarif.json
     required: false
   blackduck_changed_only:
@@ -43,6 +43,10 @@ inputs:
     description: "false create comment for each finding"
     default: "false"
     required: false
+  github_sarif:
+    description: "true create sarif format report"
+    default: "true"
+    required: false
 
 runs:
   using: composite
@@ -50,5 +54,5 @@ runs:
     # Run the Python script
     - run: |
         pip install -r ${{github.action_path}}/requirements.txt
-        python3 ${{github.action_path}}/bd_snippet_scanner.py --action_path="${{github.action_path}}" --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
+        python3 ${{github.action_path}}/bd_snippet_scanner.py --sarif="${{github.github_sarif}}" --action_path="${{github.action_path}}" --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
       shell: bash

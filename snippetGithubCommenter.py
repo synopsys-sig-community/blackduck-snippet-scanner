@@ -86,7 +86,7 @@ class GihubCommenter:
                     ## Adding vulnerabilities as a rule
                     if not ruleId in ruleIds:
                         rule = {"id":ruleId, "name": "Snippet Match", "helpUri": snippetResultsJson[snippetResultFile]['_meta']['links'][0]["href"], "shortDescription":{"text":f'{snippet["licenseDefinition"]["licenseDisplayName"]}'}, 
-                            "fullDescription":{"text":f'{snippet["licenseDefinition"]["name"]}', "markdown": f'{snippet["licenseDefinition"]["name"]}'},
+                            "fullDescription":{"text":f'{snippet["licenseDefinition"]["name"]}'},
                             "help":{"text":f'{snippet["licenseDefinition"]["name"]}', "markdown": f'{self.__createSnippetMarkdownRule(snippet, snippetResultFile, licenseFamily, None)}'}, 
                             "properties": {"security-severity": self.__nativeSeverityToNumber(licenseFamily.upper()), "tags": self.__addLicenseTags()},
                             "defaultConfiguration":{"level":self.__nativeSeverityToLevel(licenseFamily.upper())}}
