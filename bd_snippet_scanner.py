@@ -1,6 +1,7 @@
 import logging
 import sys
 import os
+import json
 import argparse
 import subprocess
 from blackduck.HubRestApi import HubInstance
@@ -19,7 +20,7 @@ class SnippetScanner:
     :param token BD Access Token
     :param log_level: Logging level
     '''
-    def __init__(self, url:str, token:str, giturl:str, gittoken:str, repo:str, prID:int, changedOnly:bool, group:bool, log_level:str) -> None:
+    def __init__(self, url:str, token:str, giturl:str, gittoken:str, repo:str, prID:int, changedOnly:bool, group:bool, toolNameforSarif:str, log_level:str) -> None:
         logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s: %(message)s', stream=sys.stderr, level=log_level)
         logging.getLogger("requests").setLevel(logging.WARNING)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -36,10 +37,10 @@ class SnippetScanner:
         if token:
             self.hub = HubInstance(url, api_token=token, insecure=True)
         if gittoken:
-            self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, changedFiles=changedOnly, group=group, log_level=log_level)
+            self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, changedFiles=changedOnly, group=group, toolNameforSarif=toolNameforSarif,  log_level=log_level, version=__versionro__)
 
     def __hashFileContent(self, file) -> str:
-        p = subprocess.Popen(f"java -cp \"snippet-scanner-1.0-SNAPSHOT.jar;sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(f"java -cp \"../blackduck-snippet-scanner/snippet-scanner-1.0-SNAPSHOT.jar;../blackduck-snippet-scanner/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
         output, err = p.communicate()
         if err:
             logging.error(err)
@@ -71,7 +72,7 @@ class SnippetScanner:
                         else:
                             analysisResults[analysisFile]=results
         return analysisResults
-
+    
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 #Main for example how to run the script
@@ -85,24 +86,28 @@ if __name__ == "__main__":
         #Parse commandline arguments
         parser.add_argument('--url', default=os.environ.get('BD_URL'), help="Baseurl for Black Duck Hub", required=False)
         parser.add_argument('--token', default=os.environ.get('BD_TOKEN'), help="BD Access token", required=False)
-        parser.add_argument('--giturl', default=os.environ.get('BD_URL'), help="Baseurl for Black Duck Hub", required=False)
-        parser.add_argument('--gittoken', default=os.environ.get('BD_TOKEN'), help="BD Access token", required=False)
-        parser.add_argument('--prID', help="BD Access token", required=False)
-        parser.add_argument('--repo', help="BD Access token", required=False)
+        parser.add_argument('--giturl', default=os.environ.get('GIT_URL'), help="Baseurl for GitHub", required=False)
+        parser.add_argument('--gittoken', default=os.environ.get('GIT_TOKEN'), help="GitHub token", required=False)
+        parser.add_argument('--prID', help="Pull request ID", required=False)
+        parser.add_argument('--repo', help="GitHub repository", required=False)
         parser.add_argument('--log_level', help="Will print more info... default=INFO", default="DEBUG")
-        parser.add_argument('--fileWithPath', help="File with full file path", required=True)
-        parser.add_argument('--result_file', help="File for result json", default="blackduckSnippetFindings.json", required=True)
+        parser.add_argument('--fileWithPath', help="File with full file path", required=False)
+        parser.add_argument('--result_file', help="File for result json", default="blackduckSnippetFindings.json", required=False)
         parser.add_argument('--changedOnly', help="Analyzing only changed files in Pull Request", default=True, type=str2bool)
         parser.add_argument('--group', help="Will create only one groupped comment per file.", default=True, type=str2bool)
         parser.add_argument('--prComment', help="Will create Pull Request Comments, otherwise json exported.", default=False, type=str2bool)
+        parser.add_argument('--sarif', help="Will create sarif format file.", default=False, type=str2bool)
+        parser.add_argument('--toolNameforSarif', help="Tool name in Sarif json", default="Black Duck Snippet", required=False)
 
         args = parser.parse_args()
 
-        snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.changedOnly, args.group, args.log_level)
+        snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.changedOnly, args.group, args.toolNameforSarif, args.log_level)
         results = snippetScanner.anylyzeSnippets(args.prComment)
         if not args.prComment and results:
+            if args.sarif:
+                results = snippetScanner.gitcommenter.createSarif(results, args.url)
             import json
-            with open(args.result_file, "w") as f:
+            with open(args.result_file, "w", encoding="UTF-8") as f:
                 f.write(json.dumps(results, indent=3))
         
         end = timer()
