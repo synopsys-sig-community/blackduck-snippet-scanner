@@ -97,7 +97,7 @@ class GihubCommenter:
                     result['ruleId'] = ruleId
                     for idx, startLine in enumerate(snippet["regions"]["sourceStartLines"]):
                         locations.append({"location":{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(startLine), 
-                                        "endLine" :int(snippet["regions"]["sourceEndLines"][idx])}}, "message" : {"text": self.__addMessage(snippet, idx)}}})
+                                        "endLine" :int(snippet["regions"]["sourceEndLines"][idx])}}, "message" : {"markdown": self.__addStepMessage(snippet, idx)}}})
                     
                     result['locations'] = [{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(snippet["regions"]["matchedStartLines"][0])}}, 
                                             "message" : {"text": "Snippet match found."}}]
@@ -111,6 +111,11 @@ class GihubCommenter:
                     result['codeFlows'] = codeFlowsTable
                     results.append(result)
         return results, rules
+
+    def __addStepMessage(self, snippet, idx) -> str:
+        message = f'Matched file: {snippet["matchedFilePath"]}\n'
+        message += f'Matched lines in OSS file: start: {snippet["regions"]["matchedStartLines"][idx]}, end: {snippet["regions"]["matchedEndLines"][idx]}'
+        return message
 
     def __addMessage(self, snippet, idx) -> str:
         message = f'Snippet match found.\n'
