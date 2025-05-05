@@ -50,5 +50,5 @@ runs:
     # Run the Python script
     - run: |
         pip install -r ${{github.action_path}}/requirements.txt
-        python3 ${{github.action_path}}/snippet_scanner/bd_snippet_scanner.py --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
+        python3 ${{github.action_path}}/bd_snippet_scanner.py --action_path="${{github.action_path}}" --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
       shell: bash

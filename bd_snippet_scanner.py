@@ -39,8 +39,8 @@ class SnippetScanner:
         if gittoken:
             self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, changedFiles=changedOnly, group=group, toolNameforSarif=toolNameforSarif,  log_level=log_level, version=__versionro__)
 
-    def __hashFileContent(self, file) -> str:
-        p = subprocess.Popen(f"java -cp \"snippet_scanner/snippet-scanner-1.0-SNAPSHOT.jar;snippet_scanner/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
+    def __hashFileContent(self, file:str, action_path:str) -> str:
+        p = subprocess.Popen(f"java -cp \"{action_path}/snippet-scanner-1.0-SNAPSHOT.jar;{action_path}/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
         output, err = p.communicate()
         if err:
             logging.error(err)
@@ -56,13 +56,13 @@ class SnippetScanner:
             response = self.hub.execute_post(url=api, data=fingerprints, custom_headers=headers)
             return response.json()
 
-    def anylyzeSnippets(self, prComment:bool) -> None:
+    def anylyzeSnippets(self, prComment:bool, action_path:str) -> None:
         analysisFiles = snippetScanner.gitcommenter.analysisFiles
         analysisResults = {}
         if analysisFiles and len(analysisFiles) > 0:
             for analysisFile in analysisFiles:
                 logging.debug(f"Analyzing file: {analysisFile}")
-                hashes = self.__hashFileContent(analysisFile)
+                hashes = self.__hashFileContent(analysisFile, action_path)
                 #Code fingerprints must be between 8 and 35000
                 if hashes and "fingerprints" in hashes and len(hashes["fingerprints"])>=8 and len(hashes["fingerprints"])<=3500:
                     results = self.__sendSnippet(hashes)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         parser.add_argument('--prID', help="Pull request ID", required=False)
         parser.add_argument('--repo', help="GitHub repository", required=False)
         parser.add_argument('--log_level', help="Will print more info... default=INFO", default="DEBUG")
-        parser.add_argument('--fileWithPath', help="File with full file path", required=False)
+        parser.add_argument('--action_path', help="Path where actions are downloaded", required=True)
         parser.add_argument('--result_file', help="File for result json", default="blackduckSnippetFindings.json", required=False)
         parser.add_argument('--changedOnly', help="Analyzing only changed files in Pull Request", default=True, type=str2bool)
         parser.add_argument('--group', help="Will create only one groupped comment per file.", default=True, type=str2bool)
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         args = parser.parse_args()
 
         snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.changedOnly, args.group, args.toolNameforSarif, args.log_level)
-        results = snippetScanner.anylyzeSnippets(args.prComment)
+        results = snippetScanner.anylyzeSnippets(args.prComment, args.action_path)
         if not args.prComment and results:
             if args.sarif:
                 results = snippetScanner.gitcommenter.createSarif(results, args.url)
