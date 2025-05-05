@@ -40,7 +40,7 @@ class SnippetScanner:
             self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, changedFiles=changedOnly, group=group, toolNameforSarif=toolNameforSarif,  log_level=log_level, version=__versionro__)
 
     def __hashFileContent(self, file) -> str:
-        p = subprocess.Popen(f"java -cp \"../blackduck-snippet-scanner/snippet-scanner-1.0-SNAPSHOT.jar;../blackduck-snippet-scanner/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(f"java -cp \"snippet-scanner-1.0-SNAPSHOT.jar;sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
         output, err = p.communicate()
         if err:
             logging.error(err)
