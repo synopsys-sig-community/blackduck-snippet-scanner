@@ -39,6 +39,10 @@ inputs:
     description: "false will export json file as a response."
     default: "false"
     required: false
+  github_prCommentGroupped:
+    description: "false create comment for each finding"
+    default: "false"
+    required: false
 
 runs:
   using: composite
@@ -46,5 +50,5 @@ runs:
     # Run the Python script
     - run: |
         pip3 install blackduck github
-        python3 ${{github.action_path}}/bd_snippet_scanner.py --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
+        python3 ${{github.action_path}}/bd_snippet_scanner.py --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
       shell: bash
