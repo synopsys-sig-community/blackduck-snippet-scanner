@@ -45,13 +45,13 @@ class GihubCommenter:
                 if file.filename.split('.')[-1] in supportedFileExtensions:
                     path = file.filename
                     files.append(path)
-                    # contents = self.repo.get_contents(path, ref=head_sha)
-                    # content = contents.decoded_content.decode()
-                    # output_file = Path(path)
-                    # if not output_file.exists():
-                    #     output_file.parent.mkdir(exist_ok=True, parents=True)
-                    #     with open(output_file, "w", encoding="UTF-8") as f:
-                    #         f.write(content)
+                    contents = self.repo.get_contents(path, ref=head_sha)
+                    content = contents.decoded_content.decode()
+                    output_file = Path(path)
+                    if not output_file.exists():
+                        output_file.parent.mkdir(exist_ok=True, parents=True)
+                        with open(output_file, "w", encoding="UTF-8") as f:
+                            f.write(content)
         return files
 
     def __getAllFiles(self) -> list:
