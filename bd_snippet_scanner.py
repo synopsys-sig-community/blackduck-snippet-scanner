@@ -20,7 +20,7 @@ class SnippetScanner:
     :param token BD Access Token
     :param log_level: Logging level
     '''
-    def __init__(self, url:str, token:str, giturl:str, gittoken:str, repo:str, prID:int, changedOnly:bool, group:bool, toolNameforSarif:str, log_level:str) -> None:
+    def __init__(self, url:str, token:str, giturl:str, gittoken:str, repo:str, prID:int, group:bool, toolNameforSarif:str, log_level:str) -> None:
         logging.basicConfig(format='%(asctime)s:%(levelname)s:%(module)s: %(message)s', stream=sys.stderr, level=log_level)
         logging.getLogger("requests").setLevel(logging.WARNING)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -37,10 +37,10 @@ class SnippetScanner:
         if token:
             self.hub = HubInstance(url, api_token=token, insecure=True)
         if gittoken:
-            self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, changedFiles=changedOnly, group=group, toolNameforSarif=toolNameforSarif,  log_level=log_level, version=__versionro__)
+            self.gitcommenter = GihubCommenter(gittoken=gittoken, giturl=giturl, repo=repo, prID=prID, group=group, toolNameforSarif=toolNameforSarif,  log_level=log_level, version=__versionro__)
 
     def __hashFileContent(self, file:str, action_path:str) -> str:
-        p = subprocess.Popen(f"java -cp \"{action_path}/snippet-scanner-1.0-SNAPSHOT.jar:{action_path}/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(f"java -cp \"{action_path}/snippet-scanner-1.0-SNAPSHOT.jar;{action_path}/sca-fingerprint-client-1.0.0.jar\" com.blackduck.snippet.App \"{file}\"", stdout=subprocess.PIPE, shell=True)
         output, err = p.communicate()
         if err:
             logging.error(err)
@@ -93,7 +93,6 @@ if __name__ == "__main__":
         parser.add_argument('--log_level', help="Will print more info... default=INFO", default="DEBUG")
         parser.add_argument('--action_path', help="Path where actions are downloaded", required=True)
         parser.add_argument('--result_file', help="File for result json", default="blackduckSnippetFindings.json", required=False)
-        parser.add_argument('--changedOnly', help="Analyzing only changed files in Pull Request", default=True, type=str2bool)
         parser.add_argument('--group', help="Will create only one groupped comment per file.", default=True, type=str2bool)
         parser.add_argument('--prComment', help="Will create Pull Request Comments, otherwise json exported.", default=False, type=str2bool)
         parser.add_argument('--sarif', help="Will create sarif format file.", default=False, type=str2bool)
@@ -101,7 +100,7 @@ if __name__ == "__main__":
 
         args = parser.parse_args()
 
-        snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.changedOnly, args.group, args.toolNameforSarif, args.log_level)
+        snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.group, args.toolNameforSarif, args.log_level)
         results = snippetScanner.anylyzeSnippets(args.prComment, args.action_path)
         if not args.prComment and results:
             if args.sarif:
