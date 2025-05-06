@@ -19,10 +19,6 @@ inputs:
     description: "Filename with path where it will be created, example: github.workspace/blackduck-snippet.sarif.json (default)"
     default: ${{github.workspace}}/blackduck-snippet.sarif.json
     required: false
-  blackduck_changed_only:
-    description: "false analyzing all files in repo"
-    default: "true"
-    required: false
   github_url:
     description: "GitHub URL"
     required: true
@@ -54,5 +50,5 @@ runs:
     # Run the Python script
     - run: |
         pip install -r ${{github.action_path}}/requirements.txt
-        python3 ${{github.action_path}}/bd_snippet_scanner.py --sarif=${{inputs.github_sarif}} --action_path="${{github.action_path}}" --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --changedOnly=${{inputs.blackduck_changed_only}} --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
+        python3 ${{github.action_path}}/bd_snippet_scanner.py --sarif=${{inputs.github_sarif}} --action_path="${{github.action_path}}" --url="${{inputs.blackduck_url}}" --token="${{inputs.blackduck_apiToken}}" --gittoken="${{inputs.github_apiToken}}" --repo="${{inputs.github_repo}}" --prID="${{inputs.github_pull_request_id}}" --group="${{inputs.github_prCommentGroupped}}" --prComment="${{inputs.github_prComment}}" --result_file="${{inputs.blackduck_outputFile}}"
       shell: bash
