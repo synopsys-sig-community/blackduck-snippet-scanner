@@ -71,6 +71,10 @@ class SnippetScanner:
                             snippetScanner.gitcommenter.createMarkdownComment(analysisFile, results)
                         else:
                             analysisResults[analysisFile]=results
+                elif hashes and "fingerprints" in hashes and len(hashes["fingerprints"]) < 8:
+                    logging.error(f"File {analysisFile} was too small for snippet analysis!")
+                elif hashes and "fingerprints" in hashes and len(hashes["fingerprints"]) > 3500:
+                    logging.error(f"File {analysisFile} was too big for snippet analysis!")
         return analysisResults
     
 def str2bool(v):
@@ -81,7 +85,7 @@ if __name__ == "__main__":
         start = timer()
         #Initialize the parser
         parser = argparse.ArgumentParser(
-            description="Black Duck Notices Report."
+            description="Black Duck Snipper Scanner."
         )
         #Parse commandline arguments
         parser.add_argument('--url', default=os.environ.get('BD_URL'), help="Baseurl for Black Duck Hub", required=False)
