@@ -93,11 +93,11 @@ class GihubCommenter:
                 for snippet in snippetResultsJson[snippetResultFile]["snippetMatches"][licenseFamily]:
                     locations = []
                     rule, result = {}, {}
-                    ruleId = f'License/{snippet["licenseDefinition"]["name"]}/{licenseFamily}'                
+                    ruleId = f'License/{snippet["licenseDefinition"]["licenseDisplayName"]}/{licenseFamily}'                
                     if not ruleId in ruleIds:
                         rule = {"id":ruleId, "name": "Snippet Match", "helpUri": snippetResultsJson[snippetResultFile]['_meta']['links'][0]["href"], "shortDescription":{"text":f'{snippet["licenseDefinition"]["licenseDisplayName"]}'}, 
-                            "fullDescription":{"text":f'{snippet["licenseDefinition"]["name"]}'},
-                            "help":{"text":f'{snippet["licenseDefinition"]["name"]}', "markdown": f'{self.__createSnippetMarkdownRule(snippet, snippetResultFile, licenseFamily, None)}'}, 
+                            "fullDescription":{"text":f'{snippet["licenseDefinition"]["licenseDisplayName"]}'},
+                            "help":{"text":f'{snippet["licenseDefinition"]["licenseDisplayName"]}', "markdown": f'{self.__createSnippetMarkdownRule(snippet, snippetResultFile, licenseFamily, None)}'}, 
                             "properties": {"security-severity": self.__licenseFamilyToNumber(licenseFamily.upper()), "tags": self.__addLicenseTags()},
                             "defaultConfiguration":{"level":self.__licenseFamilyToLevel(licenseFamily.upper())}}
                         rules.append(rule)
