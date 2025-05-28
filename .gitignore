@@ -175,3 +175,4 @@ cython_debug/
 .restconfig.json
 blackduck-snippet.sarif.json
 snippetResultsJson.json
+snippet_results.md

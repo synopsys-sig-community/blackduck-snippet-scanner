@@ -117,7 +117,7 @@ class GihubCommenter:
                 summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
             summaryText += "### Scanned Files\n"
             for snippetResultFile in snippetResultJson.keys():
-                summaryText += f"* {snippetResultFile}</br>"
+                summaryText += f"* {snippetResultFile}\n"
         else:
             summaryText += ":white_check_mark: No snippet matches found."
         return summaryText
