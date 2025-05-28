@@ -90,9 +90,27 @@ class GihubCommenter:
     def createSummaryMarkdown(self, snippetResultJson:dict) -> str:
         snippetResultJson = dict(snippetResultJson)
         summaryText = "## Snippet Analysis Results\n"
-        for snippetResultFile in snippetResultJson.keys():
-            summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
-        # self.__addSummary(summaryText)
+        if len(snippetResultJson.keys()) > 0:
+            summaryText += "\n\nThe following issues were found:</br>"
+            reciprocal, unknown, permissive = 0, 0, 0
+            for snippetResultFile in snippetResultJson.keys():
+                for licenseFamily in snippetResultJson[snippetResultFile]["snippetMatches"]:
+                    if "RECIPROCAL" in licenseFamily:
+                        reciprocal += len(snippetResultJson[snippetResultFile]["snippetMatches"][licenseFamily])
+                    elif "UNKNOWN" in licenseFamily:
+                        unknown += len(snippetResultJson[snippetResultFile]["snippetMatches"][licenseFamily])
+                    elif "PERMISSIVE" in licenseFamily:
+                        permissive += len(snippetResultJson[snippetResultFile]["snippetMatches"][licenseFamily])
+            summaryText += f':x: {reciprocal} package(s) Reciprocal license(s)</br>'
+            summaryText += f':x: {unknown} package(s) Unknown license(s)</br>'
+            summaryText += f':white_check_mark: {permissive} package(s) Permissive license(s)</br>'
+            for snippetResultFile in snippetResultJson.keys():
+                summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
+            summaryText += "### Scanned Files\n"
+            for snippetResultFile in snippetResultJson.keys():
+                summaryText += f"* {snippetResultFile}</br>"
+        else:
+            summaryText += ":white_check_mark: No snippet matches found."
         return summaryText
 
     def __getResults(self, snippetResultsJson:dict) -> list:
@@ -150,6 +168,16 @@ class GihubCommenter:
         tags.append("LICENSE_VIOLATION")
         tags.append("security")
         return tags
+
+    def __licenseFamilyToEmoij(self, argument:str) -> str: 
+        if argument:
+            if "RECIPROCAL" in argument:
+                return ":x: Reciprocal"
+            elif "UNKNOWN" in argument:
+                return ":x:"
+            elif "PERMISSIVE" in argument:
+                return ":white_check_mark:"
+        return ":white_check_mark:"
 
     # Changing the license family into sarif defaultConfiguration level format
     def __licenseFamilyToLevel(self, argument:str) -> str: 
@@ -233,10 +261,3 @@ class GihubCommenter:
         if self.pullRequest:
             self.pullRequest.create_issue_comment(comment)
             
-    def __addSummary(self, summaryText:str) -> None:
-        summary = {
-            "title": "Snippet Analysis Results",
-            "summary": "Summary",
-            "text": summaryText
-        }
-        self.repo.create_check_run(name="Snippet Analysis Results", status="completed", conclusion="failure", head_sha=self.pullRequest.head.sha, output=summary)
