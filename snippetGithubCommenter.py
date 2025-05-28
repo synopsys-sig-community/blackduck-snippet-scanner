@@ -77,16 +77,15 @@ class GihubCommenter:
             self.__createSeparatedMarkdownComment(file, snippetResult)
 
     def createSarif(self, snippetResultJson:str, url:str) -> str:
-        if snippetResultJson:
-            sarif_json = self.__getSarifJsonHeader()
-            snippets, rules = self.__getResults(snippetResultJson)
-            results = {}
-            results['results'] = snippets
-            results['tool'] = self.__getSarifJsonFooter(rules, url)
-            runs = []
-            runs.append(results)
-            sarif_json['runs'] = runs
-            return sarif_json
+        sarif_json = self.__getSarifJsonHeader()
+        snippets, rules = self.__getResults(snippetResultJson)
+        results = {}
+        results['results'] = snippets
+        results['tool'] = self.__getSarifJsonFooter(rules, url)
+        runs = []
+        runs.append(results)
+        sarif_json['runs'] = runs
+        return sarif_json
 
     def createSummaryMarkdown(self, snippetResultJson:dict) -> str:
         snippetResultJson = dict(snippetResultJson)

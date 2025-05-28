@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
         snippetScanner = SnippetScanner(args.url, args.token, args.giturl, args.gittoken, args.repo, args.prID, args.group, args.toolNameforSarif, args.log_level)
         results = snippetScanner.anylyzeSnippets(args.prComment, args.action_path)
-        if not args.prComment and results:
+        if not args.prComment:
             if args.sarif:
                 sarif_results = snippetScanner.gitcommenter.createSarif(results, args.url)
             import json
