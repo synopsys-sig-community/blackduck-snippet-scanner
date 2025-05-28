@@ -111,7 +111,7 @@ class GihubCommenter:
                             "defaultConfiguration":{"level":self.__licenseFamilyToLevel(licenseFamily.upper())}}
                         rules.append(rule)
                         ruleIds.append(ruleId)
-                    result['message'] = {"text":self.__addMessage(snippet, None)}
+                    result['message'] = {"text":self.__addMessage(snippet, None), "markdown":self.__addMessage(snippet, None)}
                     result['ruleId'] = ruleId
                     for idx, startLine in enumerate(snippet["regions"]["sourceStartLines"]):
                         locations.append({"location":{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(startLine), 
