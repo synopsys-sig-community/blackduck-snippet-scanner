@@ -89,7 +89,7 @@ class GihubCommenter:
         snippetResultJson = dict(snippetResultJson)
         summaryText = "## Snippet Analysis Results\n"
         for snippetResultFile in snippetResultJson.keys():
-            summaryText += self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)
+            summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
         self.__addSummary(summaryText)
 
     def __getResults(self, snippetResultsJson:dict) -> list:
@@ -237,4 +237,4 @@ class GihubCommenter:
             "text": summaryText
         }
         self.repo.create_check_run(name="Snippet Analysis Results", head_sha=self.pullRequest.head.sha, status="completed", 
-                                   conclusion="action_required", output=summary)
+                                   conclusion="success", output=summary)
