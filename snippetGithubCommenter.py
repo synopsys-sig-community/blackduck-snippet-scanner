@@ -135,13 +135,13 @@ class GihubCommenter:
         return message
 
     def __addMessage(self, snippet, idx) -> str:
-        message = f'### Snippet match found.\n\n'
-        message += f'**Matched OSS Library:** {snippet["projectName"]}\n'
-        message += f'**Matched OSS Library version:** {snippet["releaseVersion"]}\n'
-        message += f'**Matched OSS Library License:** {snippet["licenseDefinition"]["licenseDisplayName"]}\n'
-        message += f'**Matched file:** {snippet["matchedFilePath"]}\n'
+        message = f'### Snippet match found.</br>'
+        message += f'<b>Matched OSS Library:</b> {snippet["projectName"]}</br>'
+        message += f'<b>Matched OSS Library version:</b> {snippet["releaseVersion"]}</br>'
+        message += f'<b>Matched OSS Library License:</b> {snippet["licenseDefinition"]["licenseDisplayName"]}</br>'
+        message += f'<b>Matched file:</b> {snippet["matchedFilePath"]}</br>'
         if idx:
-            message += f'**Matched lines in OSS file: start:** {snippet["regions"]["matchedStartLines"][idx]}, **end:** {snippet["regions"]["matchedEndLines"][idx]}'
+            message += f'<b>Matched lines in OSS file: start:</b> {snippet["regions"]["matchedStartLines"][idx]}, <b>end:</b> {snippet["regions"]["matchedEndLines"][idx]}</br>'
         return message
 
     def __addLicenseTags(self) -> list:
