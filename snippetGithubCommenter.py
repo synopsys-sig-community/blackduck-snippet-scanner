@@ -38,20 +38,23 @@ class GihubCommenter:
     def __getChangedFiles(self) -> list:
         from pathlib import Path
         files = []
-        changedFiles = self.pullRequest.get_files()
-        head_sha = self.pullRequest.head.sha
-        if changedFiles and changedFiles.totalCount > 0:
-            for file in changedFiles:
-                if file.filename.split('.')[-1] in supportedFileExtensions:
-                    path = file.filename
-                    files.append(path)
-                    contents = self.repo.get_contents(path, ref=head_sha)
-                    content = contents.decoded_content.decode()
-                    output_file = Path(path)
-                    if not output_file.exists():
-                        output_file.parent.mkdir(exist_ok=True, parents=True)
-                        with open(output_file, "w", encoding="UTF-8") as f:
-                            f.write(content)
+        try:
+            changedFiles = self.pullRequest.get_files()
+            head_sha = self.pullRequest.head.sha
+            if changedFiles and changedFiles.totalCount > 0:
+                for file in changedFiles:
+                    if file.filename.split('.')[-1] in supportedFileExtensions:
+                        path = file.filename
+                        contents = self.repo.get_contents(path, ref=head_sha)
+                        content = contents.decoded_content.decode()
+                        output_file = Path(path)
+                        if not output_file.exists():
+                            output_file.parent.mkdir(exist_ok=True, parents=True)
+                            with open(output_file, "w", encoding="UTF-8") as f:
+                                f.write(content)
+                        files.append(path)
+        except github.GithubException:
+            logging.debug("No files changed or added.")
         return files
 
     def __getAllFiles(self) -> list:
