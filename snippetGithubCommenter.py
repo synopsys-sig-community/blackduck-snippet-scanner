@@ -101,9 +101,18 @@ class GihubCommenter:
                         unknown += len(snippetResultJson[snippetResultFile]["snippetMatches"][licenseFamily])
                     elif "PERMISSIVE" in licenseFamily:
                         permissive += len(snippetResultJson[snippetResultFile]["snippetMatches"][licenseFamily])
-            summaryText += f':x: {reciprocal} package(s) Reciprocal license(s)</br>'
-            summaryText += f':x: {unknown} package(s) Unknown license(s)</br>'
-            summaryText += f':white_check_mark: {permissive} package(s) Permissive license(s)</br></br>'
+            if reciprocal > 0:
+                summaryText += f':x: {reciprocal} package(s) Reciprocal license(s)</br>'
+            else: 
+                summaryText += f':white_check_mark: {reciprocal} package(s) Reciprocal license(s)</br>'
+            if unknown > 0:
+                summaryText += f':warning: {unknown} package(s) Unknown license(s)</br>'
+            else:
+                summaryText += f':white_check_mark: {unknown} package(s) Unknown license(s)</br>'
+            if permissive > 0:    
+                summaryText += f':warning: {permissive} package(s) Permissive license(s)</br></br>'
+            else:
+                summaryText += f':white_check_mark: {permissive} package(s) Permissive license(s)</br></br>'
             for snippetResultFile in snippetResultJson.keys():
                 summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
             summaryText += "### Scanned Files\n"
