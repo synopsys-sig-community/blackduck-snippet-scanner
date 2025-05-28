@@ -108,11 +108,11 @@ if __name__ == "__main__":
         results = snippetScanner.anylyzeSnippets(args.prComment, args.action_path)
         if not args.prComment and results:
             if args.sarif:
-                results = snippetScanner.gitcommenter.createSarif(results, args.url)
+                sarif_results = snippetScanner.gitcommenter.createSarif(results, args.url)
             import json
             with open(args.result_file, "w", encoding="UTF-8") as f:
-                f.write(json.dumps(results, indent=3))
-        
+                f.write(json.dumps(sarif_results, indent=3))
+        snippetScanner.gitcommenter.createSummaryMarkdown(results)
         end = timer()
         usedTime = end - start
         logging.info(f"Took: {usedTime} seconds.")

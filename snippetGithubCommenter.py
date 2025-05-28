@@ -85,6 +85,13 @@ class GihubCommenter:
             sarif_json['runs'] = runs
             return sarif_json
 
+    def createSummaryMarkdown(self, snippetResultJson:dict) -> str:
+        snippetResultJson = dict(snippetResultJson)
+        summaryText = "## Snippet Analysis Results\n"
+        for snippetResultFile in snippetResultJson.keys():
+            summaryText += self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)
+        self.__addSummary(summaryText)
+
     def __getResults(self, snippetResultsJson:dict) -> list:
         rules, results, ruleIds = [], [], []
         snippetResultsJson = dict(snippetResultsJson)
@@ -200,10 +207,11 @@ class GihubCommenter:
         snippet_comment += f'**License:** {snippet["licenseDefinition"]["licenseDisplayName"]}\n'
         return snippet_comment
 
-    def __createGroupMarkDownComment(self, file:str, snippetResult:str) -> None:
+    def __createGroupMarkDownComment(self, file:str, snippetResult:str, addSnippet=True) -> None:
+        snippet_comment = ""
         if snippetResult:
             fileUrl = f"{self.repo.html_url}/blob/{self.last_commit.sha}/{file}"
-            snippet_comment = f'**Snippet analysis has found following matches from file: [{file}]({fileUrl})**\n\n'
+            snippet_comment += f'**Snippet analysis has found following matches from file: [{file}]({fileUrl})**\n\n'
             snippet_comment += f'| License Family | Component | License | Match info |\n'
             snippet_comment += f'| -------------- | --------- | ------- | ---------- |\n'
             for licenseFamily in snippetResult["snippetMatches"]:
@@ -213,10 +221,20 @@ class GihubCommenter:
                     snippet_comment += f'{snippet["licenseDefinition"]["licenseDisplayName"]} | '
                     snippet_comment += f'**Matched file:** {snippet["matchedFilePath"]}</br>'
                     snippet_comment += f'**Matched lines:** start: {snippet["regions"]["sourceStartLines"]}, end: {snippet["regions"]["sourceEndLines"]} |\n'
-        self.__addSnippetComment(snippet_comment)
+        if addSnippet:
+            self.__addSnippetComment(snippet_comment)
+        else:
+            return  snippet_comment
 
     def __addSnippetComment(self, comment:str) -> None:
         if self.pullRequest:
             self.pullRequest.create_issue_comment(comment)
             
-    
+    def __addSummary(self, summaryText:str) -> None:
+        summary = {
+            "title": "Snippet Analysis Results",
+            "summary": "Summary",
+            "text": summaryText
+        }
+        self.repo.create_check_run(name="Snippet Analysis Results", head_sha=self.pullRequest.head.sha, status="completed", 
+                                   conclusion="Conclusion", output=summary)
