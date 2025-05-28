@@ -237,4 +237,4 @@ class GihubCommenter:
             "text": summaryText
         }
         self.repo.create_check_run(name="Snippet Analysis Results", head_sha=self.pullRequest.head.sha, status="completed", 
-                                   conclusion="Conclusion", output=summary)
+                                   conclusion="action_required", output=summary)
