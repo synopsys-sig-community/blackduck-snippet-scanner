@@ -189,7 +189,7 @@ class GihubCommenter:
         if fileUrl:
             snippet_comment = f'**Snippet analysis has found following match from file: [{file}]({fileUrl})**\n\n'
         else:
-            snippet_comment = f'## Snippet analysis has found following match**\n\n'
+            snippet_comment = f'## Snippet analysis has found following match\n\n'
         snippet_comment += f'**License family:** {":warning:" if "RECIPROCAL" in licenseFamily or "UNKNOWN" in licenseFamily else ""}{licenseFamily}\n'
         snippet_comment += f'**Name:** {snippet["projectName"]}\n'
         snippet_comment += f'**Version:** {snippet["releaseVersion"]}\n'
@@ -202,7 +202,7 @@ class GihubCommenter:
         if fileUrl:
             snippet_comment = f'**Snippet analysis has found following match from file: [{file}]({fileUrl})**\n\n'
         else:
-            snippet_comment = f'## Snippet analysis has found following match**\n\n'
+            snippet_comment = f'## Snippet analysis has found following match\n\n'
         snippet_comment += f'**License family:** {":warning:" if "RECIPROCAL" in licenseFamily or "UNKNOWN" in licenseFamily else ""}{licenseFamily}\n'
         snippet_comment += f'**Name:** {snippet["projectName"]}\n'
         snippet_comment += f'**Version:** {snippet["releaseVersion"]}\n'
