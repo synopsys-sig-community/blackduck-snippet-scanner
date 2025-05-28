@@ -108,7 +108,7 @@ class GihubCommenter:
                         locations.append({"location":{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(startLine), 
                                         "endLine" :int(snippet["regions"]["sourceEndLines"][idx])}}, "message" : {"text": self.__addStepMessage(snippet, idx), "markdown": self.__addStepMessage(snippet, idx)}}})
                     
-                    result['locations'] = [{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(snippet["regions"]["matchedStartLines"][0])}}, 
+                    result['locations'] = [{"physicalLocation":{"artifactLocation":{"uri": snippetResultFile},"region":{"startLine":int(snippet["regions"]["sourceStartLines"][0])}}, 
                                             "message" : {"text": "Snippet match found."}}]
                     codeFlowsTable, loctionsFlowsTable = [], []
                     threadFlows, loctionsFlows = {}, {}
