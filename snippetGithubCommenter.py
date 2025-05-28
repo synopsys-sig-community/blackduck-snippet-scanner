@@ -92,7 +92,8 @@ class GihubCommenter:
         summaryText = "## Snippet Analysis Results\n"
         for snippetResultFile in snippetResultJson.keys():
             summaryText += f'{self.__createGroupMarkDownComment(snippetResultFile, snippetResultJson[snippetResultFile], False)}\n'
-        self.__addSummary(summaryText)
+        # self.__addSummary(summaryText)
+        return summaryText
 
     def __getResults(self, snippetResultsJson:dict) -> list:
         rules, results, ruleIds = [], [], []

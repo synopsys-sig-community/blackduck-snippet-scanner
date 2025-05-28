@@ -112,7 +112,7 @@ if __name__ == "__main__":
             import json
             with open(args.result_file, "w", encoding="UTF-8") as f:
                 f.write(json.dumps(sarif_results, indent=3))
-        snippetScanner.gitcommenter.createSummaryMarkdown(results)
+        os.environ["GITHUB_STEP_SUMMARY"] = snippetScanner.gitcommenter.createSummaryMarkdown(results)
         end = timer()
         usedTime = end - start
         logging.info(f"Took: {usedTime} seconds.")
