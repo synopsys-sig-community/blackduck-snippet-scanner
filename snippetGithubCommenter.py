@@ -135,7 +135,7 @@ class GihubCommenter:
         return message
 
     def __addMessage(self, snippet, idx) -> str:
-        message = f'### Snippet match found.\n'
+        message = f'### Snippet match found.\n\n'
         message += f'**Matched OSS Library:** {snippet["projectName"]}\n'
         message += f'**Matched OSS Library version:** {snippet["releaseVersion"]}\n'
         message += f'**Matched OSS Library License:** {snippet["licenseDefinition"]["licenseDisplayName"]}\n'
