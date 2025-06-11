@@ -94,7 +94,7 @@ if __name__ == "__main__":
         parser.add_argument('--gittoken', default=os.environ.get('GIT_TOKEN'), help="GitHub token", required=False)
         parser.add_argument('--prID', help="Pull request ID", required=False)
         parser.add_argument('--repo', help="GitHub repository", required=False)
-        parser.add_argument('--log_level', help="Will print more info... default=INFO", default="DEBUG")
+        parser.add_argument('--log_level', help="Will print more info... default=INFO", default="INFO")
         parser.add_argument('--action_path', help="Path where actions are downloaded", required=True)
         parser.add_argument('--result_file', help="File for result json", default="blackduckSnippetFindings.json", required=False)
         parser.add_argument('--group', help="Will create only one groupped comment per file.", default=True, type=str2bool)
