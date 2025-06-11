@@ -108,10 +108,11 @@ if __name__ == "__main__":
         results = snippetScanner.anylyzeSnippets(args.prComment, args.action_path)
         if not args.prComment:
             if args.sarif:
-                sarif_results = snippetScanner.gitcommenter.createSarif(results, args.url)
-            import json
+                output_results = snippetScanner.gitcommenter.createSarif(results, args.url)
+            else:
+                output_results = results
             with open(args.result_file, "w", encoding="UTF-8") as f:
-                f.write(json.dumps(sarif_results, indent=3))
+                f.write(json.dumps(output_results, indent=3))
             with open("snippet_results.md", "w", encoding="UTF-8") as snippetFile:
                 snippetFile.write(snippetScanner.gitcommenter.createSummaryMarkdown(results))
         end = timer()
