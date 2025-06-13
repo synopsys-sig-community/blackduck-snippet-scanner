@@ -10,7 +10,6 @@
 | github_apiToken | GitHub Access Token | - | GIT_TOKEN | true |
 | github_pull_request_id | Pull request ID | - | - | false |
 | github_repo | GitHub repository name | - | - | true |
-| action_path | Path where actions are downloaded | - | - | true |
 | blackduck_outputFile | File for result json | blackduckSnippetFindings.json | - | false |
 | github_prCommentGroupped | Will create only one groupped comment per file. | true | - | false |
 | github_prComment | Will create Pull Request Comments, otherwise json exported. | false | - | false |
