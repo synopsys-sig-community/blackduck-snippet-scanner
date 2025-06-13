@@ -5,10 +5,6 @@ branding:
   icon: code
   color: blue
 inputs:
-  blackduck_log_level:
-    description: Logging level
-    default: DEBUG
-    required: false
   blackduck_url:
     description: "Black Duck URL"
     required: true

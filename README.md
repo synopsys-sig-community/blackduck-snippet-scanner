@@ -3,19 +3,17 @@
 ## Available Options
 | Option name | Description | Default value | Environment variable | Required |
 |-------------|-------------|---------------|----------|----------|
-| url | Baseurl for Black Duck Hub | - | BD_URL | false |
-| token | BD Access Token | - | BD_TOKEN | true |
-| log_level | "Will print more info | INFO | - | false |
-| giturl | GitHub Url, must be given if GH Enterprise in use | - | GIT_URL | false |
-| gittoken | GitHub Access Token | - | GIT_TOKEN | true |
-| prID | Pull request ID | - | - | false |
-| repo | GitHub repository name | - | - | true |
-| action_path | Path where actions are downloaded | - | - | true |
-| result_file | File for result json | blackduckSnippetFindings.json | - | false |
-| group | Will create only one groupped comment per file. | true | - | false |
-| prComment | Will create Pull Request Comments, otherwise json exported. | false | - | false |
-| sarif | Will create sarif format file. | false | - | false |
-| toolNameforSarif | Tool name in Sarif json | Black Duck Snippet | - | false |
+| blackduck_url | Baseurl for Black Duck Hub | - | BD_URL | false |
+| blackduck_apiToken | BD Access Token | - | BD_TOKEN | true |
+| github_url | GitHub Url, must be given if GH Enterprise in use | - | GIT_URL | false |
+| github_apiToken | GitHub Access Token | - | GIT_TOKEN | true |
+| github_pull_request_id | Pull request ID | - | - | false |
+| github_repo | GitHub repository name | - | - | true |
+| blackduck_outputFile | File for result json | blackduckSnippetFindings.json | - | false |
+| github_prCommentGroupped | Will create only one groupped comment per file. | true | - | false |
+| github_prComment | Will create Pull Request Comments, otherwise json exported. | false | - | false |
+| github_sarif | Will create sarif format file. | false | - | false |
+| github_toolNameforSarif | Tool name in Sarif json | Black Duck Snippet | - | false |
 
 ## Usage examples
 ```yaml
