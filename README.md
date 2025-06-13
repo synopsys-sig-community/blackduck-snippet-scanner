@@ -11,7 +11,7 @@
 | github_pull_request_id | Pull request ID | - | - | false |
 | github_repo | GitHub repository name | - | - | true |
 | blackduck_outputFile | File for result json | blackduckSnippetFindings.json | - | false |
-| github_prCommentGroupped | Will create only one groupped comment per file. | true | - | false |
+| github_prCommentGrouped | Will create only one grouped comment per file. | true | - | false |
 | github_prComment | Will create Pull Request Comments, otherwise json exported. | false | - | false |
 | github_sarif | Will create sarif format file. | false | - | false |
 | github_toolNameforSarif | Tool name in Sarif json | Black Duck Snippet | - | false |
@@ -38,7 +38,7 @@ jobs:
         github_repo: ${{github.repository}}
         github_pull_request_id: ${{github.event.pull_request.number}}
         github_prComment: false
-        github_prCommentGroupped: true
+        github_prCommentGrouped: true
         github_sarif: true
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
