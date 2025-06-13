@@ -5,10 +5,12 @@
 |-------------|-------------|---------------|----------|----------|
 | blackduck_url | Baseurl for Black Duck Hub | - | BD_URL | false |
 | blackduck_apiToken | BD Access Token | - | BD_TOKEN | true |
+| blackduck_log_level | "Will print more info | INFO | - | false |
 | github_url | GitHub Url, must be given if GH Enterprise in use | - | GIT_URL | false |
 | github_apiToken | GitHub Access Token | - | GIT_TOKEN | true |
 | github_pull_request_id | Pull request ID | - | - | false |
 | github_repo | GitHub repository name | - | - | true |
+| action_path | Path where actions are downloaded | - | - | true |
 | blackduck_outputFile | File for result json | blackduckSnippetFindings.json | - | false |
 | github_prCommentGroupped | Will create only one groupped comment per file. | true | - | false |
 | github_prComment | Will create Pull Request Comments, otherwise json exported. | false | - | false |

@@ -178,16 +178,6 @@ class GihubCommenter:
         tags.append("security")
         return tags
 
-    def __licenseFamilyToEmoij(self, argument:str) -> str: 
-        if argument:
-            if "RECIPROCAL" in argument:
-                return ":x: Reciprocal"
-            elif "UNKNOWN" in argument:
-                return ":x:"
-            elif "PERMISSIVE" in argument:
-                return ":white_check_mark:"
-        return ":white_check_mark:"
-
     # Changing the license family into sarif defaultConfiguration level format
     def __licenseFamilyToLevel(self, argument:str) -> str: 
         if argument:
